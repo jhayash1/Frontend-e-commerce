@@ -4,6 +4,10 @@ import { FaStar } from "react-icons/fa";
 
 export default async function ProductPage() {
   const res = await fetch("https://fakestoreapi.com/products");
+  if (!res.ok) {
+    throw new Error(`Failed to fetch products: ${res.status}`);
+  }
+
   const products = await res.json();
   return (
     <div className="container mx-auto px-6 py-10">

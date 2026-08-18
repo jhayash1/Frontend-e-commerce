@@ -18,14 +18,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    
     <html lang="en" className={`${poopins.variable} h-full antialiased`}>
+      <Analytics/>
       <head>
         <link href="lib/animate/animate.min.css" rel="stylesheet" />
       </head>
       <body className="min-h-full flex flex-col">
         <AuthProvider>
-          <Analytics/>
           <Navbar />
           {children}
           <Footer />

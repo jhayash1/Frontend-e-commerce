@@ -6,7 +6,7 @@ export default function HomePage() {
   return (
     <>
       <HeroCarousal/>
-      <ProductPage/>
+      {/* <ProductPage/> */}
     </>
   );
 }

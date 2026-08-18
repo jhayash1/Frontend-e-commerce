@@ -7,21 +7,30 @@ export default async function ProductDetails({
 }) {
   const { id } = await params;
 
-  const res = await fetch(
-    `https://fakestoreapi.com/products/${id}`
-  );
+  try {
+    const res = await fetch(
+      `https://fakestoreapi.com/products/${id}`,
+      {
+        headers: {
+          Accept: "application/json",
+        },
+        cache: "no-store",
+      }
+    );
 
-  if (!res.ok) {
-    return <h1>Product Not Found</h1>;
+    console.log("PRODUCT API STATUS:", res.status);
+    console.log("PRODUCT API URL:", res.url);
+
+    if (!res.ok) {
+      return <h1>Product Not Found</h1>;
+    }
+
+    const product = await res.json();
+
+    return <ProductDetailsClient product={product} />;
+  } catch (error) {
+    console.error("PRODUCT API ERROR:", error);
+
+    return <h1>Unable to load product</h1>;
   }
-
-  const text = await res.text();
-
-  if (!text) {
-    return <h1>Product Not Found</h1>;
-  }
-
-  const product = JSON.parse(text);
-
-  return ( <ProductDetailsClient product={product}/> );
 }

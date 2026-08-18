@@ -23,7 +23,7 @@ export default function Dashboard() {
 
   const [user, setUser] = useState<User | null>(null);
   const{cart} = useCartStore()
-  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const cartCount = cart.reduce((total: any, item: { quantity: any; }) => total + item.quantity, 0);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -61,7 +61,7 @@ export default function Dashboard() {
     <main className="min-h-screen bg-gray-50 px-4 py-8 sm:px-6 lg:px-10">
 
       {/* Welcome Section */}
-      <section className="mb-8 overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-6 text-white shadow-lg sm:p-8">
+      <section className="mb-8 overflow-hidden rounded-3xl from-blue-600 via-indigo-600 to-purple-600 p-6 text-white shadow-lg sm:p-8">
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
 
           <div>

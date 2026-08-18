@@ -22,7 +22,7 @@ export default async function ProductDetails({
     console.log("PRODUCT API URL:", res.url);
 
     if (!res.ok) {
-      return <h1>Product Not Found</h1>;
+      return <h1>Product are Not Found</h1>;
     }
 
     const product = await res.json();

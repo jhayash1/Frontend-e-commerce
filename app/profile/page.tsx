@@ -17,20 +17,11 @@ export default function Profile() {
   useEffect(() => {
     const getProfile = async () => {
       try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          router.replace("/login");
-          return;
-        }
-
         const response = await fetch(
-          "http://localhost:4000/profile",
+          "https://backend-kiy4.onrender.com/profile",
           {
             method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            credentials:"include"
           }
         );
 

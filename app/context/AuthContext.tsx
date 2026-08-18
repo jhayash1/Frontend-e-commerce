@@ -4,13 +4,15 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 type User = {
   email: string;
+  userId?: string;
+  username?: string;
 };
 
 type AuthContextType = {
   isLoggedIn: boolean;
   user: User | null;
   logout: () => void;
-  login: (token: string, userData: User) => void;
+  login: (userData: User) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(
@@ -27,32 +29,20 @@ export function AuthProvider({
 
   useEffect(() => {
   const fetchUser = async () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      return;
-    }
 
     try {
       const response = await fetch(
-        "http://localhost:4000/profile",
+        "https://backend-kiy4.onrender.com/profile",
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials:"include"
         }
       );
 
       const data = await response.json();
 
-      console.log("Profile:", data);
-
-      if (response.ok) {
+      if (response.ok && data.success) {
         setIsLoggedIn(true);
-
-        setUser({
-          email: data.email,
-        });
+        setUser(data.user);
       }
     } catch (error) {
       console.error("Profile Error:", error);
@@ -62,19 +52,24 @@ export function AuthProvider({
   fetchUser();
 }, []);
 
-  const login = (token: string, userData: User) => {
-    localStorage.setItem("token", token);
-
+  const login = (userData: User) => {
   setIsLoggedIn(true);
   setUser(userData);
   };
 
-  const logout = () => {
-   localStorage.removeItem("token");
+  const logout = async () => {
+  try {
+    await fetch("https://backend-kiy4.onrender.com/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
+  }
 
   setIsLoggedIn(false);
   setUser(null);
-  };
+};
 
   return (
     <AuthContext.Provider

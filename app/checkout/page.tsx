@@ -31,11 +31,9 @@ export default function CheckoutPage() {
   );
   const readDataMongoDB = async () => {
     try {
-      const res = await fetch("http://localhost:4000/cart", {
+      const res = await fetch("https://backend-kiy4.onrender.com/cart", {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+       credentials: "include"
       });
       const data = await res.json();
       setCart(data.cart?.items || []);
@@ -64,12 +62,6 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        router.push("/login");
-        return;
-      }
 
       if (cart.length === 0) {
         alert("Your cart is empty");
@@ -85,11 +77,11 @@ export default function CheckoutPage() {
       console.log("Order Data:", orderData);
 
       // 1. Create Razorpay Order
-      const response = await fetch("http://localhost:4000/place-order", {
+      const response = await fetch("https://backend-kiy4.onrender.com/place-order", {
         method: "POST",
+        credentials:"include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(orderData),
       });
@@ -118,12 +110,12 @@ export default function CheckoutPage() {
           try {
             // 4. Verify payment
             const verifyRes = await fetch(
-              "http://localhost:4000/verify-payment",
+              "https://backend-kiy4.onrender.com/verify-payment",
               {
                 method: "POST",
+                credentials: "include",
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                   razorpay_payment_id: paymentResponse.razorpay_payment_id,
@@ -142,8 +134,6 @@ export default function CheckoutPage() {
             );
 
             const verifyResult = await verifyRes.json();
-
-            console.log("Verification Result:", verifyResult);
 
             if (verifyResult.success) {
               router.push("/payment-success");

@@ -28,7 +28,7 @@ type Address = {
 
 type CartStore = {
   cart: CartItem[];
-setCart: (items: CartItem[]) => void;
+  setCart: (items: CartItem[]) => void;
   saveCartToDB: () => Promise<void>;
 
   removeFromCart: (productId: number) => void;
@@ -55,12 +55,12 @@ export const useCartStore: any = create<CartStore>()(
         state: "",
         pincode: "",
       },
-      
-setCart: (items) =>
-  set({
-    cart: items,
-  }),
-      setAddress: (address,) => {
+
+      setCart: (items) =>
+        set({
+          cart: items,
+        }),
+      setAddress: (address) => {
         set({
           address: address,
         });
@@ -114,7 +114,7 @@ setCart: (items) =>
 
           const cart = useCartStore.getState().cart;
 
-          const response = await fetch("http://localhost:4000/cart", {
+          const response = await fetch("https://backend-kiy4.onrender.com/cart", {
             method: "POST",
 
             headers: {

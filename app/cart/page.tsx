@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useCartStore } from "../store/cartStore";
 import { useRouter } from "next/navigation";
 import { FaTrash } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 
 export default function CartPage() {
   const router = useRouter();
@@ -17,17 +18,10 @@ export default function CartPage() {
   useEffect(() => {
     const getCart = async () => {
       try {
-        const token = localStorage.getItem("token");
 
-        if (!token) {
-          return;
-        }
-
-        const response = await fetch("http://localhost:4000/cart", {
+        const response = await fetch("https://backend-kiy4.onrender.com/cart", {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials:"include",
         });
 
         const data = await response.json();
@@ -46,20 +40,21 @@ export default function CartPage() {
 
     getCart();
   }, [setCart]);
+  const {isLoggedIn} = useAuth()
   const handleCheckout = () => {
-    // Implement checkout logic here
+    if(!isLoggedIn){
+      router.push("/login");
+      return
+    }
     router.push("/checkout");
   };
   const handleRemove = async (itemId: number) => {
     try {
-      const response = await fetch(`http://localhost:4000/cart/${itemId}`, {
+      const response = await fetch(`https://backend-kiy4.onrender.com/cart/${itemId}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+       credentials: "include",
       });
       const data = await response.json();
-      console.log("Remove Item Response:", data);
       if (data.success) {
         setCart(data.cart.items);
       }

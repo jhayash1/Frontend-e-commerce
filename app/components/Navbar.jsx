@@ -16,47 +16,37 @@ import { useCartStore } from "../store/cartStore";
 export default function Navbar() {
   const router = useRouter();
   const { isLoggedIn, logout } = useAuth();
-  const [search,setSearch] = useState("")
+  const [search, setSearch] = useState("");
 
   const { cart, setCart } = useCartStore();
 
-  const cartLength = cart.length
+  const cartLength = cart.length;
   useEffect(() => {
-  console.log("isLoggedIn:", isLoggedIn);
-
-  const getCart = async () => {
-    const token = localStorage.getItem("token");
-    if (!isLoggedIn) {
-      setCart([]);
-      return;
-    }
-
-    if (!token) {
-      setCart([]);
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:4000/cart", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setCart(data.cart?.items || []);
+    const getCart = async () => {
+      if (!isLoggedIn) {
+        setCart([]);
+        return;
       }
-    } catch (error) {
-      console.error("Get Cart Error:", error);
-      setCart([]);
-    }
-  };
 
-  getCart();
-}, [isLoggedIn, setCart]);
+      try {
+        const response = await fetch("https://backend-kiy4.onrender.com/cart", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          setCart(data.cart?.items || []);
+        }
+      } catch (error) {
+        console.error("Get Cart Error:", error);
+        setCart([]);
+      }
+    };
+
+    getCart();
+  }, [isLoggedIn, setCart]);
 
   // const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -117,7 +107,7 @@ export default function Navbar() {
           </div>
 
           {/* Center */}
-          <div className="text-sm">
+          {/* <div className="text-sm">
             <span className="font-medium">Call Us: </span>
             <a
               href="tel:+0121234567890"
@@ -125,26 +115,25 @@ export default function Navbar() {
             >
               (+012) 1234 567890
             </a>
-          </div>
+          </div> */}
 
           {/* Right */}
           <div className="flex items-center gap-6 text-sm">
-            {!isLoggedIn && (
+            {/* {!isLoggedIn && (
             <Link href="/register" className="hover:text-blue-600">
               Register
             </Link>
+            )} */}
+            {isLoggedIn && (
+              <>
+                <Link href="/product" className="hover:text-blue-600">
+                  Products
+                </Link>
+                <Link href="/cart" className="hover:text-blue-600">
+                  Cart
+                </Link>
+              </>
             )}
-          {isLoggedIn && (
-            <>
-            
-            <Link href="/product" className="hover:text-blue-600">
-              Products
-            </Link>
-            <Link href="/cart" className="hover:text-blue-600">
-              Cart
-            </Link>
-            </>
-          )}
           </div>
           <div className="flex items-center gap-6 text-sm">
             {!isLoggedIn && (
@@ -194,7 +183,7 @@ export default function Navbar() {
                 value={search}
                 placeholder="Search Looking For?"
                 className="flex-1 px-5 py-3 outline-none"
-                onChange={(e)=>setSearch(e.target.value)}
+                onChange={(e) => setSearch(e.target.value)}
               />
 
               <button className="bg-blue-600 px-8 text-white hover:bg-blue-700">
@@ -211,7 +200,7 @@ export default function Navbar() {
 
             <button className="relative rounded-full border p-3 hover:bg-gray-100">
               <FaHeart />
-               {/* {cartCount > 0 && (
+              {/* {cartCount > 0 && (
         <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
           {cartCount}
         </span>
@@ -220,9 +209,9 @@ export default function Navbar() {
 
             <button className="relative flex items-center gap-2 rounded-full border p-3 hover:bg-gray-100">
               <FaShoppingCart />
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
-                  {cartLength}
-                </span>
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                {cartLength}
+              </span>
             </button>
           </div>
         </div>

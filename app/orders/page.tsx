@@ -10,11 +10,10 @@ export default function OrdersPage() {
     const fetchOrders = async () => {
       try {
         const res = await fetch(
-          "http://localhost:4000/orders",
+          "https://backend-kiy4.onrender.com/orders",
           {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
+            method:"GET",
+            credentials: "include"
           }
         );
 
@@ -34,7 +33,6 @@ export default function OrdersPage() {
 
     fetchOrders();
   }, []);
-  console.log("Orders state:", orders);
 
   if (loading) {
     return <h1>Loading orders...</h1>;

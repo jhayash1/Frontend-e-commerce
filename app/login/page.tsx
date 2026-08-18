@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
+import Link from "next/link";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -25,8 +26,9 @@ export default function LoginPage() {
   const router = useRouter();
 
   const onSubmit = async (data: LoginForm) => {
-    const response = await fetch("http://localhost:4000/login", {
+    const response = await fetch("https://backend-kiy4.onrender.com/login", {
       method: "POST",
+      credentials : "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -34,18 +36,14 @@ export default function LoginPage() {
     });
 
     const result = await response.json();
+    console.log(result)
 
-    if (response.ok) {
-      login(result.token);
+    if (response.ok) { 
+      login(result.user)// if login menu change
       router.push("/dashboard");
 
-      console.log("Login Successful");
-      console.log(result.token);
-
-      const profileResponse = await fetch("http://localhost:4000/profile", {
-        headers: {
-          Authorization: `Bearer ${result.token}`,
-        },
+      const profileResponse = await fetch("https://backend-kiy4.onrender.com/profile", {
+        credentials: "include"
       });
 
       const profile = await profileResponse.json();
@@ -104,6 +102,12 @@ export default function LoginPage() {
           >
             Login
           </button>
+          <Link
+            href="/register"
+            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700"
+          >
+            Register
+          </Link>
         </form>
       </div>
     </div>

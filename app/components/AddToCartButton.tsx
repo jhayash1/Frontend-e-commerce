@@ -32,7 +32,7 @@ export default function AddToCartButton({ product }: Props) {
         return;
       }
 
-      const response = await fetch("http://localhost:4000/cart", {
+      const response = await fetch("https://backend-kiy4.onrender.com/cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

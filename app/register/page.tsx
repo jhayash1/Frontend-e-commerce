@@ -45,7 +45,7 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegisterForm) => {
     try {
       const response = await fetch(
-        "http://localhost:4000/register",
+        "https://backend-kiy4.onrender.com/register",
         {
           method: "POST",
 

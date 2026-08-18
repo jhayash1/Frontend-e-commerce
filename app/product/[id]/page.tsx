@@ -1,36 +1,47 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import ProductDetailsClient from "./ProductDetailsClient";
 
-export default async function ProductDetails({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+export default function ProductDetails() {
+  const { id } = useParams();
 
-  try {
-    const res = await fetch(
-      `https://fakestoreapi.com/products/${id}`,
-      {
-        headers: {
-          Accept: "application/json",
-        },
-        cache: "no-store",
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getProduct() {
+      try {
+        const res = await fetch(
+          `https://fakestoreapi.com/products/${id}`
+        );
+
+        if (!res.ok) {
+          throw new Error("Product not found");
+        }
+
+        const data = await res.json();
+        setProduct(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
-    );
-
-    console.log("PRODUCT API STATUS:", res.status);
-    console.log("PRODUCT API URL:", res.url);
-
-    if (!res.ok) {
-      return <h1>Product are Not Found</h1>;
     }
 
-    const product = await res.json();
+    if (id) {
+      getProduct();
+    }
+  }, [id]);
 
-    return <ProductDetailsClient product={product} />;
-  } catch (error) {
-    console.error("PRODUCT API ERROR:", error);
-
-    return <h1>Unable to load product</h1>;
+  if (loading) {
+    return <h1>Loading...</h1>;
   }
+
+  if (!product) {
+    return <h1>Product id Not Found</h1>;
+  }
+
+  return <ProductDetailsClient product={product} />;
 }

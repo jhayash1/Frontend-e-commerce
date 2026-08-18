@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { AuthProvider } from "./context/AuthContext";
+import { Analytics } from "@vercel/analytics/next"
 const poopins = Poppins({
   variable: "--font-poopins",
   subsets: ["latin"],
@@ -17,12 +18,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
+    
     <html lang="en" className={`${poopins.variable} h-full antialiased`}>
       <head>
         <link href="lib/animate/animate.min.css" rel="stylesheet" />
       </head>
       <body className="min-h-full flex flex-col">
         <AuthProvider>
+          <Analytics/>
           <Navbar />
           {children}
           <Footer />
